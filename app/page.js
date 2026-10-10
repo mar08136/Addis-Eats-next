@@ -1,16 +1,15 @@
 
 export const metadata = {
-  title: "Our Menu",
+  title: "Addis Eats | Ethiopian Food Delivery",
   description:
-    "Explore Ethiopian favorites, burgers, pizza, sweets and drinks on the Addis Eats menu. Find your next meal in Addis Ababa.",
-  alternates: {
-    canonical: "/menu",
-  },
-  openGraph: {
-    title: "Our Menu · Addis Eats",
-    description:
-      "Explore Ethiopian favorites and everyday meals on the Addis Eats menu.",
-    url: "/menu",
-    type: "website",
-  },
+    "Discover Ethiopian favorites and everyday meals with Addis Eats in Addis Ababa.",
 };
+
+export default function Home() {
+  return (
+    <main>
+      <h1>Welcome to Addis Eats</h1>
+      <p>Discover your next favorite meal.</p>
+    </main>
+  );
+}
