@@ -16,8 +16,11 @@ export default async function OpenGraphImage({ params }) {
   if (!dish) {
     return new Response("Dish not found", { status: 404 });
   }
-  const hasValidImage = dish.image && (dish.image.startsWith("http") || dish.image.startsWith("/"));
+
+  // Use the env variable, but fall back gracefully to your main production domain
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://addis-eats-next-4wqn.vercel.app";
+  
+  const hasValidImage = dish.image && (dish.image.startsWith("http") || dish.image.startsWith("/"));
   const imageUrl = hasValidImage 
     ? (dish.image.startsWith("http") ? dish.image : `${baseUrl}${dish.image}`)
     : null;
