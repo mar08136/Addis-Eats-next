@@ -16,13 +16,11 @@ export default async function OpenGraphImage({ params }) {
   if (!dish) {
     return new Response("Dish not found", { status: 404 });
   }
-
+  const hasValidImage = dish.image && (dish.image.startsWith("http") || dish.image.startsWith("/"));
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://addis-eats-next-4wqn.vercel.app";
-  
-  let imageUrl = dish.image;
-  if (!imageUrl.startsWith("http")) {
-    imageUrl = `${baseUrl}${imageUrl.startsWith("/") ? "" : "/"}${imageUrl}`;
-  }
+  const imageUrl = hasValidImage 
+    ? (dish.image.startsWith("http") ? dish.image : `${baseUrl}${dish.image}`)
+    : null;
 
   return new ImageResponse(
     (
@@ -95,15 +93,29 @@ export default async function OpenGraphImage({ params }) {
             borderRadius: "24px",
             overflow: "hidden",
             backgroundColor: "#3b2b21",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <img
-            src={imageUrl}
-            alt={dish.name}
-            width="1200"
-            height="630"
-            style={{ objectFit: "cover", width: "100%", height: "100%" }}
-          />
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={dish.name}
+              width="1200"
+              height="630"
+              style={{ objectFit: "cover", width: "100%", height: "100%" }}
+            />
+          ) : (
+            <div
+              style={{
+                fontSize: "32px",
+                color: "#e7a15b",
+                fontWeight: "bold",
+              }}
+            >
+              {dish.name}
+            </div>
+          )}
         </div>
       </div>
     ),
