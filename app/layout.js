@@ -1,4 +1,3 @@
-
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
@@ -29,12 +28,13 @@ export const metadata = {
     title: "Addis Eats | Food Delivery in Addis Ababa",
     description:
       "Order burgers, Ethiopian favorites, pizza, and more for delivery in Addis Ababa.",
+    url: "https://addis-eats-next-4wqn.vercel.app",
     images: [
       {
-        url: "/opengraph-image",
+        url: "/image/burger.jpg", // Uses your image inside public/image/
         width: 1200,
         height: 630,
-        alt: "Delicious food from Addis Eats",
+        alt: "Addis Eats Burger and Food Delivery",
       },
     ],
   },
@@ -43,7 +43,7 @@ export const metadata = {
     title: "Addis Eats | Food Delivery in Addis Ababa",
     description:
       "Order burgers, Ethiopian favorites, pizza, and more for delivery in Addis Ababa.",
-    images: ["/opengraph-image"],
+    images: ["/image/burger.jpg"],
   },
 };
 
