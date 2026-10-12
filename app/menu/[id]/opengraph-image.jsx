@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getDish } from "../../../lib/seo-dishes";
 
-export const runtime = "edge"; // Use edge runtime for fast image generation on Vercel
+export const runtime = "nodejs";
 export const alt = "Addis Eats dish preview";
 export const size = {
   width: 1200,
@@ -17,9 +17,12 @@ export default async function OpenGraphImage({ params }) {
     return new Response("Dish not found", { status: 404 });
   }
 
-  // Build an absolute public image URL so ImageResponse can load it reliably on Vercel
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://addis-eats-next-4wqn.vercel.app";
-  const imageUrl = dish.image.startsWith("http") ? dish.image : `${baseUrl}${dish.image}`;
+  
+  let imageUrl = dish.image;
+  if (!imageUrl.startsWith("http")) {
+    imageUrl = `${baseUrl}${imageUrl.startsWith("/") ? "" : "/"}${imageUrl}`;
+  }
 
   return new ImageResponse(
     (
