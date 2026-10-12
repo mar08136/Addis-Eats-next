@@ -1,3 +1,4 @@
+
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
@@ -14,22 +15,35 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-  ),
+  metadataBase: new URL("https://addis-eats-next-4wqn.vercel.app"),
   title: {
     template: "%s · Addis Eats",
     default: "Addis Eats | Food Delivery in Addis Ababa",
   },
   description:
-    "Order Ethiopian favorites, burgers, pizza, sweets and drinks from the Addis Eats menu. Discover delicious food for delivery in Addis Ababa.",
+    "Order Ethiopian favorites, burgers, pizza, sweets and drinks from Addis Eats. Delicious food delivered in Addis Ababa.",
   openGraph: {
     type: "website",
     locale: "en_ET",
     siteName: "Addis Eats",
     title: "Addis Eats | Food Delivery in Addis Ababa",
     description:
-      "Discover Ethiopian favorites and everyday meals on the Addis Eats menu.",
+      "Order burgers, Ethiopian favorites, pizza, and more for delivery in Addis Ababa.",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Delicious food from Addis Eats",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Addis Eats | Food Delivery in Addis Ababa",
+    description:
+      "Order burgers, Ethiopian favorites, pizza, and more for delivery in Addis Ababa.",
+    images: ["/opengraph-image"],
   },
 };
 
