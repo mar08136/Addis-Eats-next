@@ -67,7 +67,8 @@ export default async function DishPage({ params }) {
   }
 
   const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    "https://addis-eats-next-4wqn.vercel.app";
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -92,22 +93,70 @@ export default async function DishPage({ params }) {
         }}
       />
 
-      <article>
-        <Image
-          src={dish.image}
-          alt={dish.name}
-          width={800}
-          height={600}
-          sizes="(max-width: 768px) 100vw, 800px"
-        />
+      <div className="dish-detail-container">
+        <a href="/menu" className="dish-back-link">
+          <span>←</span> Back to menu
+        </a>
 
-        <h1>{dish.name}</h1>
-        <p>{dish.description}</p>
-        <p>
-          <strong>{dish.price} ETB</strong>
-        </p>
-        <p>Category: {dish.category}</p>
-      </article>
+        <article className="dish-detail-card">
+          <div className="dish-detail-image">
+            <Image
+              src={dish.image}
+              alt={dish.name}
+              width={800}
+              height={600}
+              priority
+              sizes="(max-width: 850px) 100vw, 50vw"
+            />
+
+            <span className="dish-image-badge">
+              ADDIS EATS ORIGINAL
+            </span>
+          </div>
+
+          <div className="dish-detail-info">
+            <span className="dish-category-badge">
+              {dish.category}
+            </span>
+
+            <p className="dish-eyebrow">MADE TO SATISFY</p>
+
+            <h1 className="dish-detail-title">{dish.name}</h1>
+
+            <p className="dish-detail-description">
+              {dish.description}
+            </p>
+
+            <div className="dish-price-row">
+              <span className="dish-price-label">Your price</span>
+              <p className="dish-detail-price">
+                {dish.price} <span>ETB</span>
+              </p>
+            </div>
+
+            <div className="dish-detail-divider" />
+
+            <div className="dish-delivery-note">
+              <span className="dish-delivery-icon">✦</span>
+              <div>
+                <strong>A little happiness, delivered.</strong>
+                <p>
+                  Enjoy your favorite flavors with Addis Eats,
+                  your food destination in Addis Ababa.
+                </p>
+              </div>
+            </div>
+
+            <a href="/menu" className="dish-browse-button">
+              Explore the menu <span>→</span>
+            </a>
+
+            <p className="dish-detail-footer">
+              GOOD FOOD. GOOD MOOD. ADDIS EATS.
+            </p>
+          </div>
+        </article>
+      </div>
     </main>
   );
 }
