@@ -1,4 +1,3 @@
-
 "use client"
 
 import Image from "next/image"
@@ -8,6 +7,7 @@ import { useEffect, useMemo, useState } from "react"
 import useSWR from "swr"
 import AddToCartButton from "./AddToCartButton"
 import fetcher from "../../lib/fetcher"
+import { createDishSlug } from "../../lib/dish-slug"
 
 const categories = [
   "all",
@@ -171,7 +171,7 @@ export default function MenuClient({ dishes }) {
               {filteredDishes.map((dish) => (
                 <article key={dish.id} className="dish-card">
                   <Link
-                    href={`/menu/${dish.id}`}
+                    href={`/menu/${createDishSlug(dish.name)}`}
                     className="dish-link"
                   >
                     <Image
@@ -179,7 +179,8 @@ export default function MenuClient({ dishes }) {
                       alt={dish.name}
                       width={400}
                       height={300}
-                      sizes="(max-width: 768px) 100vw, 400px"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+                      quality={65}
                       className="dish-image"
                     />
 

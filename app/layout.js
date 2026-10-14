@@ -55,14 +55,39 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <CartProvider>
-          <header>
-            <nav>
-              <Link href="/">Addis Eats</Link>
-              <Link href="/menu">Menu</Link>
-              <Link href="/cart">Cart</Link>
-              <Link href="/orders">Orders</Link>
+          <header  className="playful-header">
+            <Link href="/" className="playful-logo">
+                      <span className="logo-mark">✦</span>
+                      Addis <span>Eats</span>
+                    </Link>
+            
+                    <nav className="playful-nav" aria-label="Main navigation">
+                      <Link className="nav-active" href="/">
+                        Home
+                      </Link>
+                      <Link href="/menu">Menu</Link>
+                        <Link href="/orders">Orders</Link>
               <Link href="/checkout">Checkout</Link>
-            </nav>
+<Link href="/favorites">Favorites</Link>
+                    </nav>
+            
+                    <div className="header-actions">
+                      <Link
+                        href="/menu"
+                        className="header-search"
+                        aria-label="Explore menu"
+                      >
+                        ⌕
+                      </Link>
+            
+                      <Link href="/cart" className="header-cart">
+                        🛒 <span>Cart</span>
+                      </Link>
+            
+                      <Link href="/signin" className="header-account" aria-label="Sign in">
+                        M
+                      </Link>
+                    </div>
           </header>
 
           {children}

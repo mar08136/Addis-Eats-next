@@ -14,12 +14,17 @@ export async function placeOrder(previousState, formData) {
 
   const name = formData.get("name");
   const phone = formData.get("phone");
+  const area = formData.get("area");
   const total = Number(formData.get("total"));
 
   const error = validateOrder(name, phone);
 
   if (error) {
     return { error };
+  }
+
+  if (typeof area !== "string" || !area.trim()) {
+    return { error: "Please select your delivery neighbourhood" };
   }
 
   if (!total || total <= 0) {
@@ -31,14 +36,17 @@ export async function placeOrder(previousState, formData) {
     userId: session.id,
     name,
     phone,
+    area,
     total,
     status: "confirmed",
+    createdAt: new Date().toISOString(),
   };
 
   orders.push(order);
 
   revalidatePath("/orders");
   revalidatePath("/checkout");
+  revalidatePath("/dashboard");
 
   return {
     message: "Order placed successfully",
@@ -68,6 +76,7 @@ export async function cancelOrder(orderId) {
   order.status = "cancelled";
 
   revalidatePath("/orders");
+  revalidatePath("/dashboard");
 
   return { message: "Order cancelled successfully" };
 }

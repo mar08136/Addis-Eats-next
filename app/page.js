@@ -1,229 +1,238 @@
 
 import Link from "next/link";
+import Image from "next/image";
+import { Nunito } from "next/font/google";
+
+const nunito = Nunito({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-nunito",
+  display: "swap",
+});
 
 export const metadata = {
-  title: "Addis Eats | Fast Food & More",
+  title: "Addis Eats | Delicious Food Delivered",
   description:
-    "Discover burgers, pizza, crispy chicken, fries and your favorite meals with Addis Eats.",
+    "Discover Ethiopian favorites, burgers, pasta, coffee, and more with Addis Eats.",
 };
 
 const categories = [
-  { name: "Burgers", icon: "🍔", color: "#f1dfce" },
-  { name: "Pizza", icon: "🍕", color: "#f5e7c8" },
-  { name: "Chicken", icon: "🍗", color: "#eddbcc" },
-  { name: "Fries & Sides", icon: "🍟", color: "#f5e9bd" },
-  { name: "Desserts", icon: "🍰", color: "#f1dce0" },
-  { name: "Drinks", icon: "🥤", color: "#dce7e8" },
+  { name: "Ethiopian", emoji: "🍲", color: "peach" },
+  { name: "Burgers", emoji: "🍔", color: "yellow" },
+  { name: "Chicken & Fish", emoji: "🍗", color: "green" },
+  { name: "Breakfast", emoji: "🥞", color: "pink" },
+  { name: "Drinks", emoji: "☕", color: "blue" },
+  { name: "Sweets", emoji: "🍰", color: "purple" },
 ];
 
-const popularDishes = [
+const dishes = [
   {
-    name: "Classic Cheeseburger",
-    description: "Juicy beef, melted cheese, fresh lettuce",
-    price: "From 250 ETB",
-    image:
-      "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=700&q=85",
-    tag: "BESTSELLER",
+    name: "Traditional Injera",
+    description: "A delicious taste of Ethiopia",
+    price: 320,
+    image: "/images/kitifo.webp",
+    emoji: "🍲",
   },
   {
-    name: "Loaded Pepperoni Pizza",
-    description: "Golden crust, rich sauce, extra cheese",
-    price: "From 350 ETB",
-    image:
-      "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=700&q=85",
-    tag: "FAN FAVORITE",
+    name: "Beef Burger",
+    description: "Juicy, cheesy, and satisfying",
+    price: 280,
+    image: "/images/burger1.png",
+    emoji: "🍔",
   },
   {
-    name: "Crispy Fried Chicken",
-    description: "Crunchy coating, tender and flavorful",
-    price: "From 280 ETB",
-    image:
-      "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=700&q=85",
-    tag: "MUST TRY",
+    name: "Fresh Fish",
+    description: "A flavorful favorite",
+    price: 350,
+    image: "/images/fish.jpeg",
+    emoji: "🐟",
+  },
+  {
+    name: "Sweet Treat",
+    description: "Something sweet for your day",
+    price: 180,
+    image: "/images/cheese%20cake.jpeg",
+    emoji: "🍰",
   },
 ];
 
-export default function Home() {
+export default function HomePage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    name: "Addis Eats",
+    description: "Food ordering in Addis Ababa, Ethiopia.",
+    servesCuisine: ["Ethiopian", "Fast Food"],
+    areaServed: "Addis Ababa",
+  };
+
   return (
-    <main className="min-h-screen overflow-hidden bg-[#f8f1ed] text-[#25211f]">
-      <section className="mx-auto grid max-w-7xl items-center gap-12 px-6 py-14 sm:px-10 md:py-20 lg:grid-cols-2 lg:px-16">
-        <div className="relative z-10">
-          <p className="mb-6 flex items-center gap-3 text-xs font-bold tracking-[0.24em] text-[#9e5b24]">
-            <span className="h-px w-8 bg-[#9e5b24]" />
-            GOOD FOOD. GOOD MOOD.
-          </p>
+    <main
+      className={`playful-home ${nunito.variable}`}
+      style={{ fontFamily: "var(--font-nunito), sans-serif" }}
+    >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
 
-          <h1 className="max-w-2xl text-5xl font-black leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl">
-            Your cravings.
-            <span className="mt-2 block text-[#9e5b24]">
-              Our kitchen.
-            </span>
+      <header />
+
+      <section className="playful-hero">
+        <div className="hero-copy">
+          <span className="hero-pill">🌟 GOOD FOOD. GOOD VIBES!</span>
+
+          <h1>
+            Delicious food.
+            <br />
+            <span>Delivered to you!</span>
           </h1>
 
-          <p className="mt-7 max-w-lg text-base leading-8 text-[#6b605a] sm:text-lg">
-            From juicy burgers and crispy fries to pizza worth sharing,
-            find your next favorite bite with Addis Eats.
+          <p>
+            Your favorite flavors, all in one place. Discover amazing Ethiopian
+            dishes and comfort food delivered right to your door.
           </p>
 
-          <div className="mt-9 flex flex-wrap gap-4">
-            <Link
-              href="/menu"
-              className="rounded-xl bg-[#9e5b24] px-7 py-4 text-sm font-bold text-white shadow-lg shadow-[#9e5b24]/20 transition hover:-translate-y-1 hover:bg-[#884b1a]"
-            >
-              Explore Menu <span className="ml-2">→</span>
+          <div className="hero-buttons">
+            <Link href="/menu" className="playful-primary">
+              Explore the Menu <span>→</span>
             </Link>
 
-            <Link
-              href="/cart"
-              className="rounded-xl border border-[#d9c9bd] bg-[#fffaf7] px-7 py-4 text-sm font-bold transition hover:border-[#9e5b24]"
-            >
-              View Cart
+            <Link href="/cart" className="playful-secondary">
+              View My Cart
             </Link>
           </div>
 
-          <div className="mt-12 flex flex-wrap gap-x-8 gap-y-4 border-t border-[#e4d6cc] pt-7">
+          <div className="hero-benefits">
             <div>
-              <p className="text-lg font-black">Fresh</p>
-              <p className="mt-1 text-xs text-[#6b605a]">Made for your cravings</p>
+              <span>🛵</span>
+              <p>
+                <strong>Fast delivery</strong>
+                <small>Food to your door</small>
+              </p>
             </div>
+
             <div>
-              <p className="text-lg font-black">Local</p>
-              <p className="mt-1 text-xs text-[#6b605a]">Proudly serving Addis</p>
-            </div>
-            <div>
-              <p className="text-lg font-black">Easy</p>
-              <p className="mt-1 text-xs text-[#6b605a]">Simple online ordering</p>
+              <span>❤️</span>
+              <p>
+                <strong>Made with love</strong>
+                <small>Meals worth sharing</small>
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-xl">
-          <div className="absolute -right-8 top-8 h-64 w-64 rounded-full bg-[#e7c5a5]/50 blur-3xl" />
+        <div className="hero-art">
+          <div className="hero-sun" />
 
-          <div className="relative overflow-hidden rounded-[2rem] bg-[#23180c] p-3 shadow-2xl shadow-[#392719]/15">
-            <img
-              src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=1100&q=90"
-              alt="Delicious burger with golden fries"
-              className="h-[360px] w-full rounded-[1.5rem] object-cover sm:h-[460px]"
+          <div className="hero-food-image">
+            <Image
+                src="/images/burger2.png"
+                alt="Burger"
+                fill
+                preload
+                fetchPriority="high"
+                sizes="(max-width: 768px) 90vw, 45vw"
+                className="hero-food-image hero-burger-image"
             />
-
-            <div className="absolute bottom-7 left-7 right-7 flex items-center justify-between rounded-2xl border border-white/20 bg-[#23180c]/85 p-4 text-white backdrop-blur-md sm:bottom-9 sm:left-9 sm:right-9">
-              <div>
-                <p className="text-xs font-medium text-[#e8b486]">
-                  YOUR NEXT FAVORITE
-                </p>
-                <p className="mt-1 text-lg font-bold">One bite. Big mood.</p>
-              </div>
-              <Link
-                href="/menu"
-                aria-label="Explore the menu"
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-[#9e5b24] text-xl transition hover:bg-[#b86c30]"
-              >
-                →
-              </Link>
-            </div>
           </div>
 
-          <div className="absolute -left-5 top-8 rounded-xl bg-[#fffaf7] px-4 py-3 shadow-xl sm:-left-8">
-            <p className="text-sm font-black">Made to crave.</p>
-            <p className="mt-1 text-xs text-[#6b605a]">Every bite counts.</p>
+          <div className="hero-sticker">
+            BIG FLAVOR
+            <br />
+            BIG SMILES!
+          </div>
+
+          <span className="hero-spark spark-one">✳</span>
+          <span className="hero-spark spark-two">✦</span>
+
+          <div className="hero-caption">
+            Freshly made
+            <br />
+            just for you!
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-12 sm:px-10 lg:px-16">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+      <section className="playful-section categories-section">
+        <div className="playful-section-heading">
           <div>
-            <p className="text-xs font-bold tracking-[0.2em] text-[#9e5b24]">
-              FIND YOUR FAVORITE
-            </p>
-            <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
-              What are you craving?
+            <span className="section-kicker">WHAT ARE YOU CRAVING?</span>
+            <h2>
+              Find your <span>favorite.</span>
             </h2>
           </div>
 
-          <Link
-            href="/menu"
-            className="text-sm font-bold text-[#884b1a] transition hover:underline"
-          >
-            See full menu →
+          <Link href="/menu" className="playful-view-all">
+            View all →
           </Link>
         </div>
 
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="playful-category-grid">
           {categories.map((category) => (
             <Link
-              key={category.name}
               href="/menu"
-              className="group rounded-2xl border border-[#eadfd6] bg-[#fffaf7] p-5 text-center transition duration-300 hover:-translate-y-1 hover:border-[#c9946d] hover:shadow-lg hover:shadow-[#392719]/5"
+              key={category.name}
+              className={`playful-category ${category.color}`}
             >
-              <div
-                style={{ backgroundColor: category.color }}
-                className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl text-3xl transition group-hover:scale-105"
-              >
-                {category.icon}
-              </div>
-              <p className="mt-4 text-sm font-bold">{category.name}</p>
+              <span>{category.emoji}</span>
+              <strong>{category.name}</strong>
+              <small>Explore dishes →</small>
             </Link>
           ))}
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-16 sm:px-10 lg:px-16">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+      <section className="playful-section picks-section">
+        <div className="playful-section-heading">
           <div>
-            <p className="text-xs font-bold tracking-[0.2em] text-[#9e5b24]">
-              THE CROWD LOVES THESE
-            </p>
-            <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
-              Popular right now.
+            <span className="section-kicker">HANDPICKED FOR YOU</span>
+            <h2>
+              Today&apos;s <span>top picks.</span>
             </h2>
-            <p className="mt-3 text-sm leading-6 text-[#6b605a]">
-              A few delicious reasons to skip cooking today.
-            </p>
           </div>
 
-          <Link
-            href="/menu"
-            className="rounded-lg border border-[#d9c9bd] px-5 py-3 text-sm font-bold transition hover:border-[#9e5b24] hover:bg-[#fffaf7]"
-          >
-            Explore everything →
+          <Link href="/menu" className="playful-view-all">
+            Full menu →
           </Link>
         </div>
 
-        <div className="mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {popularDishes.map((dish) => (
-            <article
-              key={dish.name}
-              className="group overflow-hidden rounded-2xl border border-[#eadfd6] bg-[#fffaf7] transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#392719]/10"
-            >
-              <div className="relative overflow-hidden">
-                <img
+        <div className="playful-dish-grid">
+          {dishes.map((dish) => (
+            <article className="playful-dish-card" key={dish.name}>
+              <Link
+                href="/menu"
+                className="dish-image"
+                aria-label={`Explore ${dish.name}`}
+              >
+                <Image
                   src={dish.image}
                   alt={dish.name}
-                  loading="lazy"
-                  className="h-56 w-full object-cover transition duration-500 group-hover:scale-105"
+                  fill
+                  sizes="(max-width: 600px) 90vw, (max-width: 1024px) 45vw, 25vw"
+                  className="dish-photo"
                 />
-                <span className="absolute left-4 top-4 rounded-md bg-[#23180c] px-3 py-2 text-[10px] font-bold tracking-widest text-white">
-                  {dish.tag}
+
+                <span className="dish-heart" aria-hidden="true">
+                  ♡
                 </span>
-              </div>
+              </Link>
 
-              <div className="p-5">
-                <h3 className="text-lg font-black">{dish.name}</h3>
-                <p className="mt-2 text-sm leading-6 text-[#6b605a]">
-                  {dish.description}
-                </p>
+              <div className="dish-info">
+                <span className="dish-rating">
+                  ★ <span>Popular choice</span>
+                </span>
 
-                <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#eee3da] pt-4">
-                  <p className="text-sm font-black text-[#884b1a]">
-                    {dish.price}
-                  </p>
-                  <Link
-                    href="/menu"
-                    className="rounded-lg bg-[#9e5b24] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#884b1a]"
-                  >
-                    Order now +
+                <h3>{dish.name}</h3>
+                <p>{dish.description}</p>
+
+                <div className="dish-bottom">
+                  <strong>ETB {dish.price}</strong>
+
+                  <Link href="/menu" className="dish-order-button">
+                    Order →
                   </Link>
                 </div>
               </div>
@@ -232,24 +241,32 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-6 mb-16 overflow-hidden rounded-3xl bg-[#23180c] px-6 py-14 text-center text-white sm:mx-10 sm:py-20 lg:mx-16">
-        <p className="text-xs font-bold tracking-[0.25em] text-[#e8b486]">
-          YOUR NEXT BITE IS WAITING
-        </p>
-        <h2 className="mx-auto mt-4 max-w-2xl text-3xl font-black sm:text-5xl">
-          Good food makes an ordinary day better.
-        </h2>
-        <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-[#e5d9ce] sm:text-base">
-          Find your favorites, discover something new, and let Addis Eats
-          take care of the cravings.
-        </p>
-        <Link
-          href="/menu"
-          className="mt-8 inline-flex rounded-xl bg-[#9e5b24] px-8 py-4 text-sm font-bold text-white transition hover:bg-[#b86c30]"
-        >
-          Find Your Next Favorite →
-        </Link>
+      <section className="playful-delivery-banner">
+        <div>
+          <span>THE GOOD STUFF IS JUST A CLICK AWAY</span>
+          <h2>Hungry? We&apos;ve got you.</h2>
+          <p>Your next favorite meal is waiting for you.</p>
+
+          <Link href="/menu" className="banner-order-button">
+            Order something delicious →
+          </Link>
+        </div>
+
+        <div className="banner-illustration" aria-hidden="true">
+          🛵
+        </div>
       </section>
+
+      <footer className="playful-footer">
+        <Link href="/" className="playful-logo">
+          <span className="logo-mark">✦</span>
+          Addis <span>Eats</span>
+        </Link>
+
+        <p>Good food, right around Addis. ❤️</p>
+
+        <Link href="/menu">Explore our menu →</Link>
+      </footer>
     </main>
   );
 }

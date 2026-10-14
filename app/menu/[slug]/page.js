@@ -1,7 +1,7 @@
 
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getDish, getDishes } from "../../../lib/seo-dishes";
+import { getDish, getDishes, createDishSlug } from "../../../lib/seo-dishes";
 
 export const revalidate = 3600;
 
@@ -9,32 +9,30 @@ export async function generateStaticParams() {
   const dishes = await getDishes();
 
   return dishes.map((dish) => ({
-    id: String(dish.id),
+    slug: createDishSlug(dish.name),
   }));
 }
 
 export async function generateMetadata({ params }) {
-  const { id } = await params;
-  const dish = await getDish(id);
+  const { slug } = await params;
+  const dish = await getDish(slug);
 
   if (!dish) {
     return {
       title: "Dish Not Found",
-      robots: {
-        index: false,
-        follow: true,
-      },
+      robots: { index: false, follow: true },
     };
   }
 
   const description =
     `${dish.name} for ${dish.price} ETB. ${dish.description}`.slice(0, 160);
+  const imageUrl = `/menu/${createDishSlug(dish.name)}/opengraph-image`;
 
   return {
     title: dish.name,
     description,
     alternates: {
-      canonical: `/menu/${dish.id}`,
+      canonical: `/menu/${createDishSlug(dish.name)}`,
     },
     openGraph: {
       title: `${dish.name} · Addis Eats`,
@@ -42,7 +40,7 @@ export async function generateMetadata({ params }) {
       type: "website",
       images: [
         {
-          url: `/menu/${dish.id}/opengraph-image`,
+          url: imageUrl,
           width: 1200,
           height: 630,
           alt: `${dish.name} from Addis Eats`,
@@ -53,18 +51,16 @@ export async function generateMetadata({ params }) {
       card: "summary_large_image",
       title: `${dish.name} · Addis Eats`,
       description,
-      images: [`/menu/${dish.id}/opengraph-image`],
+      images: [imageUrl],
     },
   };
 }
 
 export default async function DishPage({ params }) {
-  const { id } = await params;
-  const dish = await getDish(id);
+  const { slug } = await params;
+  const dish = await getDish(slug);
 
-  if (!dish) {
-    notFound();
-  }
+  if (!dish) notFound();
 
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ||
@@ -108,24 +104,14 @@ export default async function DishPage({ params }) {
               priority
               sizes="(max-width: 850px) 100vw, 50vw"
             />
-
-            <span className="dish-image-badge">
-              ADDIS EATS ORIGINAL
-            </span>
+            <span className="dish-image-badge">ADDIS EATS ORIGINAL</span>
           </div>
 
           <div className="dish-detail-info">
-            <span className="dish-category-badge">
-              {dish.category}
-            </span>
-
+            <span className="dish-category-badge">{dish.category}</span>
             <p className="dish-eyebrow">MADE TO SATISFY</p>
-
             <h1 className="dish-detail-title">{dish.name}</h1>
-
-            <p className="dish-detail-description">
-              {dish.description}
-            </p>
+            <p className="dish-detail-description">{dish.description}</p>
 
             <div className="dish-price-row">
               <span className="dish-price-label">Your price</span>

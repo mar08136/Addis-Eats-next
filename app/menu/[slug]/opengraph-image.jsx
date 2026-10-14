@@ -10,19 +10,27 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function OpenGraphImage({ params }) {
-  const { id } = await params;
-  const dish = await getDish(id);
+  const { slug } = await params;
+  const dish = await getDish(slug);
 
   if (!dish) {
     return new Response("Dish not found", { status: 404 });
   }
 
-  // Use the env variable, but fall back gracefully to your main production domain
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://addis-eats-next-4wqn.vercel.app";
-  
-  const hasValidImage = dish.image && (dish.image.startsWith("http") || dish.image.startsWith("/"));
-  const imageUrl = hasValidImage 
-    ? (dish.image.startsWith("http") ? dish.image : `${baseUrl}${dish.image}`)
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    "https://addis-eats-next-4wqn.vercel.app";
+
+  const hasValidImage =
+    typeof dish.image === "string" &&
+    (dish.image.startsWith("https://") ||
+      dish.image.startsWith("http://") ||
+      dish.image.startsWith("/"));
+
+  const imageUrl = hasValidImage
+    ? dish.image.startsWith("http")
+      ? dish.image
+      : `${baseUrl}${dish.image}`
     : null;
 
   return new ImageResponse(
@@ -57,6 +65,7 @@ export default async function OpenGraphImage({ params }) {
           >
             ADDIS EATS
           </div>
+
           <div
             style={{
               display: "flex",
@@ -67,6 +76,7 @@ export default async function OpenGraphImage({ params }) {
           >
             {dish.name}
           </div>
+
           <div
             style={{
               display: "flex",
@@ -77,6 +87,7 @@ export default async function OpenGraphImage({ params }) {
           >
             {dish.price} ETB
           </div>
+
           <div
             style={{
               display: "flex",
@@ -104,16 +115,21 @@ export default async function OpenGraphImage({ params }) {
             <img
               src={imageUrl}
               alt={dish.name}
-              width="1200"
-              height="630"
-              style={{ objectFit: "cover", width: "100%", height: "100%" }}
+              width={576}
+              height={520}
+              style={{
+                objectFit: "cover",
+                width: "100%",
+                height: "100%",
+              }}
             />
           ) : (
             <div
               style={{
+                display: "flex",
                 fontSize: "32px",
                 color: "#e7a15b",
-                fontWeight: "bold",
+                fontWeight: 700,
               }}
             >
               {dish.name}

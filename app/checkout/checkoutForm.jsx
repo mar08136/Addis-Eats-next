@@ -44,6 +44,26 @@ export default function CheckoutForm() {
           />
         </label>
 
+        <label className="checkoutLabel">
+          Delivery Neighbourhood
+          <select
+            className="checkoutInput"
+            name="area"
+            defaultValue=""
+            required
+          >
+            <option value="" disabled>
+              Select your delivery area
+            </option>
+            <option value="Bole">Bole</option>
+            <option value="Piazza">Piazza</option>
+            <option value="Kazanchis">Kazanchis</option>
+            <option value="Mexico">Mexico</option>
+            <option value="Lideta">Lideta</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+
         {state?.error && (
           <p className="checkoutError">{state.error}</p>
         )}

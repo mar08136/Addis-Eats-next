@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { createDishSlug } from "../../lib/seo-dishes";
 
 export default function DishList({ dishes }) {
   return (
@@ -7,7 +8,7 @@ export default function DishList({ dishes }) {
       {dishes.map((dish) => (
         <article key={dish.id} className="dish-card">
           <Link
-            href={`/menu/${dish.id}`}
+            href={`/menu/${createDishSlug(dish.name)}`}
             className="dish-link"
           >
             <Image
