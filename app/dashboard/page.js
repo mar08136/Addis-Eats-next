@@ -1,4 +1,4 @@
-
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "../../lib/session";
 import { orders } from "../lib/orders";

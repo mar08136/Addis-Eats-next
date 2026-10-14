@@ -69,6 +69,7 @@ export default function RootLayout({ children }) {
                         <Link href="/orders">Orders</Link>
               <Link href="/checkout">Checkout</Link>
 <Link href="/favorites">Favorites</Link>
+<Link href="/dashboard">Dashboard</Link>
                     </nav>
             
                     <div className="header-actions">
