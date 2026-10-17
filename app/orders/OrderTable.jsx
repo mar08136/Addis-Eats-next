@@ -1,145 +1,191 @@
+
 import Link from "next/link";
+import ExportOrders from "../dashboard/ExportOrders";
+import { etb, when } from "../../lib/format";
 
 const PAGE_SIZE = 5;
 
-function buildHref(page, sortBy, direction) {
-  const params = new URLSearchParams({
-    page: String(page),
-    sort: sortBy,
-    direction,
-  });
-
-  return `/dashboard?${params.toString()}`;
-}
+const columns = [
+  { key: "id", label: "Order ID" },
+  { key: "name", label: "Customer" },
+  { key: "area", label: "Neighbourhood" },
+  { key: "total", label: "Total" },
+  { key: "status", label: "Status" },
+  { key: "createdAt", label: "Order Date" },
+];
 
 export default function OrderTable({
-  orders,
+  orders = [],
   sort = "createdAt",
   direction = "desc",
   page = 1,
 }) {
-  const sortedOrders = [...orders].sort((a, b) => {
-    let first = a[sort] ?? "";
-    let second = b[sort] ?? "";
+  const validSort = columns.some((column) => column.key === sort)
+    ? sort
+    : "createdAt";
 
-    if (sort === "total") {
-      first = Number(first);
-      second = Number(second);
+  const sortedOrders = [...orders].sort((a, b) => {
+    const first = a[validSort] ?? "";
+    const second = b[validSort] ?? "";
+
+    let comparison;
+
+    if (validSort === "total") {
+      comparison = Number(first) - Number(second);
+    } else if (validSort === "createdAt") {
+      comparison = new Date(first).getTime() - new Date(second).getTime();
     } else {
-      first = String(first).toLowerCase();
-      second = String(second).toLowerCase();
+      comparison = String(first).localeCompare(String(second));
     }
 
-    if (first < second) return direction === "asc" ? -1 : 1;
-    if (first > second) return direction === "asc" ? 1 : -1;
-    return 0;
+    return direction === "asc" ? comparison : -comparison;
   });
 
   const totalPages = Math.max(1, Math.ceil(sortedOrders.length / PAGE_SIZE));
-  const currentPage = Math.min(Math.max(1, page), totalPages);
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const pageOrders = sortedOrders.slice(startIndex, startIndex + PAGE_SIZE);
+  const currentPage = Math.min(
+    Math.max(1, Number(page) || 1),
+    totalPages
+  );
 
-  const nextDirection = (column) =>
-    sort === column && direction === "asc" ? "desc" : "asc";
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const visibleOrders = sortedOrders.slice(
+    startIndex,
+    startIndex + PAGE_SIZE
+  );
+
+  function sortUrl(column) {
+    const nextDirection =
+      validSort === column && direction === "asc" ? "desc" : "asc";
+
+    return `?sort=${column}&direction=${nextDirection}&page=1`;
+  }
+
+  function pageUrl(nextPage) {
+    return `?sort=${validSort}&direction=${direction}&page=${nextPage}`;
+  }
 
   return (
-    <section className="dashboardTableCard">
+    <section className="dashboardTable">
       <div className="dashboardTableHeading">
         <div>
           <h2>Recent Orders</h2>
           <p>Sort by selecting a column heading.</p>
         </div>
-        <span>{sortedOrders.length} orders</span>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <span>{sortedOrders.length} orders</span>
+          <ExportOrders orders={sortedOrders} />
+        </div>
       </div>
 
-      {sortedOrders.length === 0 ? (
-        <div className="dashboardEmpty">
-          <h3>No orders yet</h3>
-          <p>Orders will appear here after customers place them.</p>
-        </div>
-      ) : (
-        <>
-          <div className="dashboardTableScroll">
-            <table className="dashboardOrdersTable">
-              <caption>Orders sorted by {sort}, {direction === "asc" ? "ascending" : "descending"}</caption>
-              <thead>
-                <tr>
-                  <th scope="col">
-                    <Link href={buildHref(1, "id", nextDirection("id"))}>
-                      Order ID
-                    </Link>
-                  </th>
-                  <th scope="col">
-                    <Link href={buildHref(1, "name", nextDirection("name"))}>
-                      Customer
-                    </Link>
-                  </th>
-                  <th scope="col">
-                    <Link href={buildHref(1, "area", nextDirection("area"))}>
-                      Neighbourhood
-                    </Link>
-                  </th>
-                  <th scope="col">
-                    <Link href={buildHref(1, "total", nextDirection("total"))}>
-                      Total
-                    </Link>
-                  </th>
-                  <th scope="col">
-                    <Link href={buildHref(1, "status", nextDirection("status"))}>
-                      Status
-                    </Link>
-                  </th>
-                  <th scope="col">
-                    <Link href={buildHref(1, "createdAt", nextDirection("createdAt"))}>
-                      Date
-                    </Link>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {pageOrders.map((order) => (
-                  <tr key={order.id}>
-                    <td>{order.id}</td>
-                    <td>{order.name || "Customer"}</td>
-                    <td>{order.area || "Not recorded"}</td>
-                    <td>{Number(order.total || 0).toLocaleString("en-ET")} ETB</td>
-                    <td>
-                      <span className={`dashboardStatus ${order.status === "cancelled" ? "isCancelled" : ""}`}>
-                        {order.status || "unknown"}
-                      </span>
-                    </td>
-                    <td>
-                      {order.createdAt
-                        ? new Date(order.createdAt).toLocaleDateString("en-ET")
-                        : "Not recorded"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left">
+          <caption className="sr-only">
+            Addis Eats orders, sortable by column
+          </caption>
 
-          <nav className="dashboardPagination" aria-label="Order table pages">
-            <span>
-              Showing {startIndex + 1}–{Math.min(startIndex + PAGE_SIZE, sortedOrders.length)} of {sortedOrders.length}
+          <thead>
+            <tr>
+              {columns.map((column) => (
+                <th key={column.key} scope="col" className="p-3">
+                  <Link
+                    href={sortUrl(column.key)}
+                    className="font-semibold hover:underline"
+                    aria-label={`Sort by ${column.label}`}
+                  >
+                    {column.label}
+                    {validSort === column.key
+                      ? direction === "asc"
+                        ? " ↑"
+                        : " ↓"
+                      : ""}
+                  </Link>
+                </th>
+              ))}
+            </tr>
+          </thead>
+
+          <tbody>
+            {visibleOrders.length > 0 ? (
+              visibleOrders.map((order) => (
+                <tr key={order.id}>
+                  <td className="p-3">{order.id}</td>
+                  <td className="p-3">{order.name || "Customer"}</td>
+                  <td className="p-3">{order.area || "Not recorded"}</td>
+                  <td className="p-3">
+                    {etb.format(Number(order.total || 0))}
+                  </td>
+                  <td className="p-3">
+                    <span
+                      className={`orderStatus ${
+                        order.status === "cancelled"
+                          ? "cancelled"
+                          : "confirmed"
+                      }`}
+                    >
+                      {order.status || "Unknown"}
+                    </span>
+                  </td>
+                  <td className="p-3">
+                    {order.createdAt
+                      ? when.format(new Date(order.createdAt))
+                      : "Not recorded"}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={columns.length} className="p-6 text-center">
+                  No orders found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-3 p-4">
+        <p>
+          {sortedOrders.length === 0
+            ? "Showing 0 orders"
+            : `Showing ${startIndex + 1}–${Math.min(
+                startIndex + PAGE_SIZE,
+                sortedOrders.length
+              )} of ${sortedOrders.length} orders`}
+        </p>
+
+        <nav aria-label="Order table pagination" className="flex gap-2">
+          {currentPage > 1 ? (
+            <Link
+              href={pageUrl(currentPage - 1)}
+              className="rounded-lg border px-3 py-2"
+            >
+              Previous
+            </Link>
+          ) : (
+            <span className="rounded-lg border px-3 py-2 opacity-50">
+              Previous
             </span>
-            <div>
-              {currentPage > 1 && (
-                <Link href={buildHref(currentPage - 1, sort, direction)}>
-                  Previous
-                </Link>
-              )}
-              <span>Page {currentPage} of {totalPages}</span>
-              {currentPage < totalPages && (
-                <Link href={buildHref(currentPage + 1, sort, direction)}>
-                  Next
-                </Link>
-              )}
-            </div>
-          </nav>
-        </>
-      )}
+          )}
+
+          <span className="px-3 py-2">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          {currentPage < totalPages ? (
+            <Link
+              href={pageUrl(currentPage + 1)}
+              className="rounded-lg border px-3 py-2"
+            >
+              Next
+            </Link>
+          ) : (
+            <span className="rounded-lg border px-3 py-2 opacity-50">
+              Next
+            </span>
+          )}
+        </nav>
+      </div>
     </section>
   );
 }

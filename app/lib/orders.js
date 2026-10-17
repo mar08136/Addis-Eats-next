@@ -2,7 +2,7 @@ export const orders = [
   {
     id: "order-1",
     userId: "user-1",
-    status: "confirmed",
+    status: "preparing",
     total: 650,
     area: "Bole",
     createdAt: "2026-10-11T09:30:00.000Z",

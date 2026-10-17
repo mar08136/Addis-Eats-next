@@ -1,28 +1,5 @@
 [
   {
-    "id": 1,
-    "name": "Beef Burger",
-    "category": "fast-food",
-    "type": "burger",
-    "description": "Juicy beef burger with a toasted bun, fresh vegetables and savory sauce.",
-    "price": 690,
-    "ingredients": [
-      "beef patty",
-      "burger bun",
-      "lettuce",
-      "tomato",
-      "onion",
-      "sauce"
-    ],
-    "image": "/images/burger1.png",
-    "isPopular": false,
-    "rating": 4.6,
-    "reviews": 37,
-    "preparationTime": "15-20 min",
-    "calories": 187,
-    "offer": null
-  },
-  {
     "id": 2,
     "name": "Grilled Fish",
     "category": "chicken-fish",
